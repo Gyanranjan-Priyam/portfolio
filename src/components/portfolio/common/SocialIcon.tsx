@@ -1,3 +1,4 @@
+
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ interface SocialIconProps {
   variant?: 'default' | 'ghost' | 'outline' | 'filled';
   showLabel?: boolean;
   showExternalIcon?: boolean;
+  className?: string;
 }
 
 // Size variants

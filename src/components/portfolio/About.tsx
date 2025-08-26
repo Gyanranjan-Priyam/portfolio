@@ -6,29 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Palette, ChevronDown, ChevronUp, Award, Heart, Coffee } from "lucide-react";
 import { SectionTitle } from "./common/SectionTitle";
 
-// Animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.3,
-    },
-  },
-};
+// Simplified animation variants for better performance
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: ["easeOut"]
-    }
-  },
-};
+
 
 // Extended about data
 const aboutData = {
@@ -64,16 +44,23 @@ const aboutData = {
 // Main Enhanced About Component
 export function About() {
   const [showMore, setShowMore] = useState(false);
+  const [isInView, setIsInView] = useState(false);
 
   return (
     <section id="about" className="mx-auto max-w-6xl px-4 py-16">
       <motion.div 
-        variants={containerVariants} 
-        initial="hidden" 
-        whileInView="show" 
+        initial="hidden"
+        whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
+        onViewportEnter={() => setIsInView(true)}
+        className="space-y-8"
       >
-        <motion.div variants={itemVariants}>
+        {/* Section Title */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+        >
           <SectionTitle 
             icon={<Palette className="h-6 w-6"/>} 
             title="About" 
@@ -81,7 +68,12 @@ export function About() {
           />
         </motion.div>
         
-        <motion.div variants={itemVariants}>
+        {/* Main Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
           <Card className="rounded-3xl border-2 backdrop-blur-sm bg-background/50 hover:bg-background/80 transition-all duration-500">
             <CardContent className="p-8 md:p-10 grid md:grid-cols-3 gap-8">
               
@@ -91,12 +83,12 @@ export function About() {
                 {aboutData.introduction.map((paragraph, index) => (
                   <motion.p
                     key={index}
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.2 + index * 0.2 }}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                    transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                     className="text-lg leading-relaxed"
                   >
-                    {paragraph.split(/(\b(?:React \+ TypeScript|Next\.js|Tailwind|shadcn\/ui)\b)/g).map((part, partIndex) => {
+                    {paragraph.split(/(\\b(?:React \+ TypeScript|Next\.js|Tailwind|shadcn\/ui)\\b)/g).map((part, partIndex) => {
                       const highlightedTerms = ['React + TypeScript', 'Next.js', 'Tailwind', 'shadcn/ui'];
                       if (highlightedTerms.includes(part)) {
                         return (
@@ -113,16 +105,18 @@ export function About() {
                 {/* Technology Stack */}
                 <motion.div 
                   className="flex flex-wrap gap-3 pt-4"
-                  variants={containerVariants}
-                  initial="hidden"
-                  whileInView="show"
+                  initial={{ opacity: 0 }}
+                  animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
                 >
-                  {aboutData.technologies.slice(0, showMore ? aboutData.technologies.length : 7).map((tech) => (
+                  {aboutData.technologies.slice(0, showMore ? aboutData.technologies.length : 7).map((tech, index) => (
                     <motion.div
                       key={tech}
-                      variants={itemVariants}
-                      whileHover={{ scale: 1.05, rotate: 2 }}
-                      transition={{ duration: 0.2 }}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.3, delay: 0.6 + index * 0.05 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       <Badge 
                         variant="secondary" 
@@ -134,12 +128,16 @@ export function About() {
                   ))}
                   
                   {aboutData.technologies.length > 7 && (
-                    <motion.div variants={itemVariants}>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+                      transition={{ duration: 0.3, delay: 0.8 }}
+                    >
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setShowMore(!showMore)}
-                        className="rounded-2xl h-8"
+                        className="rounded-2xl h-8 hover:bg-primary/10 transition-colors"
                       >
                         {showMore ? (
                           <>Show Less <ChevronUp className="ml-1 h-3 w-3" /></>
@@ -152,23 +150,24 @@ export function About() {
                 </motion.div>
 
                 {/* Expandable Achievements Section */}
-                <AnimatePresence>
+                <AnimatePresence mode="wait">
                   {showMore && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="pt-6"
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                      className="overflow-hidden space-y-4"
                     >
-                      <h5 className="font-semibold mb-4">Key Achievements</h5>
-                      <div className="grid grid-cols-2 gap-3">
+                      <h5 className="font-semibold">Key Achievements</h5>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {aboutData.achievements.map((achievement, index) => (
                           <motion.div
                             key={achievement}
-                            className="p-3 rounded-2xl bg-muted/20 border border-border/50"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.1 }}
+                            className="p-3 rounded-2xl bg-muted/20 border border-border/50 hover:bg-muted/30 transition-colors"
                           >
                             <span className="text-sm font-medium">{achievement}</span>
                           </motion.div>
@@ -183,8 +182,8 @@ export function About() {
               <motion.div 
                 className="space-y-6"
                 initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
               >
                 {/* Quick Facts */}
                 <div>
@@ -193,10 +192,10 @@ export function About() {
                     {aboutData.quickFacts.map((fact, index) => (
                       <motion.li
                         key={fact}
-                        className="flex items-center gap-3 text-sm"
                         initial={{ opacity: 0, x: 10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                        animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 10 }}
+                        transition={{ duration: 0.4, delay: 0.6 + index * 0.05 }}
+                        className="flex items-center gap-3 text-sm"
                       >
                         <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
                         <span className="text-muted-foreground">{fact}</span>
@@ -212,10 +211,11 @@ export function About() {
                     {aboutData.interests.map(({ icon: Icon, label, description }, index) => (
                       <motion.div
                         key={label}
-                        className="flex items-start gap-3 p-3 rounded-2xl bg-muted/20 hover:bg-muted/30 transition-colors"
                         initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+                        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                        transition={{ duration: 0.4, delay: 0.8 + index * 0.1 }}
+                        className="flex items-start gap-3 p-3 rounded-2xl bg-muted/20 hover:bg-muted/30 transition-colors cursor-pointer"
+                        whileHover={{ y: -2 }}
                       >
                         <Icon className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
                         <div>
@@ -229,10 +229,10 @@ export function About() {
 
                 {/* Status */}
                 <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.5, delay: 1.0 }}
                   className="p-4 rounded-2xl bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 1.2 }}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>

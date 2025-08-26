@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
-import { Plus, LucideIcon } from "lucide-react"
+import { Plus } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 
@@ -32,7 +33,7 @@ export function AnimatedSocialIcons({
           animate={{
             x: active ? "calc(100% + 16px)" : 0,
           }}
-          transition={{ type: "ease-in", duration: 0.5 }}
+          transition={{ type: "tween", ease: "easeIn", duration: 0.5 }}
         >
           <motion.button
             className={cn(
@@ -43,7 +44,8 @@ export function AnimatedSocialIcons({
             onClick={() => setActive(!active)}
             animate={{ rotate: active ? 45 : 0 }}
             transition={{
-              type: "ease-in",
+              type: "tween",
+              ease: "easeIn",
               duration: 0.5,
             }}
           >
@@ -71,7 +73,8 @@ export function AnimatedSocialIcons({
               rotate: active ? 0 : 45,
             }}
             transition={{
-              type: "ease-in",
+              type: "tween",
+              ease: "easeIn",
               duration: 0.4,
             }}
           >

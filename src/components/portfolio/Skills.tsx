@@ -1,11 +1,11 @@
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { Code2 } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { SectionTitle } from "./common/SectionTitle";
 
 // Animation variants
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -16,14 +16,14 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   show: { 
     opacity: 1, 
     y: 0,
     transition: {
       duration: 0.6,
-      ease: "easeOut"
+      ease: [0.43, 0.13, 0.23, 0.96]
     }
   },
 };
@@ -103,7 +103,7 @@ export function Skills() {
           className="grid md:grid-cols-2 gap-8"
           variants={containerVariants}
         >
-          {skillsData.map((skill, index) => (
+          {skillsData.map((skill) => (
             <motion.div key={skill.name} variants={itemVariants}>
               <SkillCard {...skill} />
             </motion.div>

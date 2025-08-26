@@ -1,11 +1,11 @@
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SectionTitle } from "./common/SectionTitle";
 
-// Animation variants
-const containerVariants = {
+// Animation variants with proper typing
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -16,7 +16,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   show: { 
     opacity: 1, 
@@ -26,6 +26,59 @@ const itemVariants = {
       ease: [0.4, 0, 0.2, 1] // cubic-bezier easing
     }
   },
+};
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  show: { 
+    opacity: 1, 
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      ease: [0.4, 0, 0.2, 1]
+    }
+  },
+  hover: {
+    scale: 1.02,
+    transition: {
+      duration: 0.3,
+      ease: "easeInOut"
+    }
+  }
+};
+
+const bulletVariants: Variants = {
+  hidden: { opacity: 0, x: 10 },
+  show: { 
+    opacity: 1, 
+    x: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  },
+};
+
+const tabContentVariants: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: "easeOut",
+      staggerChildren: 0.1,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -10,
+    transition: {
+      duration: 0.3,
+      ease: "easeIn"
+    }
+  }
 };
 
 // Types
@@ -48,8 +101,6 @@ const experienceData: ExperienceItemProps[] = [
       "Built RBAC admin tools in Next.js"
     ]
   },
-  
- 
 ];
 
 // Education data
@@ -90,8 +141,8 @@ const educationData: ExperienceItemProps[] = [
 function ExperienceItem({ role, org, time, bullets }: ExperienceItemProps) {
   return (
     <motion.div
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.3 }}
+      variants={cardVariants}
+      whileHover="hover"
     >
       <Card className="rounded-3xl border-2 hover:border-primary/30 hover:shadow-lg transition-all duration-300 bg-background/50 backdrop-blur-sm">
         <CardHeader className="pb-3">
@@ -111,9 +162,11 @@ function ExperienceItem({ role, org, time, bullets }: ExperienceItemProps) {
               <motion.li 
                 key={index}
                 className="flex items-start gap-3 text-muted-foreground"
-                initial={{ opacity: 0, x: 10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                variants={bulletVariants}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
               >
                 <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
                 <span>{bullet}</span>
@@ -163,12 +216,15 @@ export function Experience() {
             <TabsContent value="experience" className="mt-8">
               <motion.div 
                 className="grid md:grid-cols-2 gap-8"
-                variants={containerVariants}
+                variants={tabContentVariants}
                 initial="hidden"
                 animate="show"
               >
                 {experienceData.map((experience, index) => (
-                  <motion.div key={`${experience.org}-${index}`} variants={itemVariants}>
+                  <motion.div 
+                    key={`${experience.org}-${index}`} 
+                    variants={itemVariants}
+                  >
                     <ExperienceItem {...experience} />
                   </motion.div>
                 ))}
@@ -178,12 +234,15 @@ export function Experience() {
             <TabsContent value="education" className="mt-8">
               <motion.div 
                 className="grid md:grid-cols-2 gap-8"
-                variants={containerVariants}
+                variants={tabContentVariants}
                 initial="hidden"
                 animate="show"
               >
                 {educationData.map((education, index) => (
-                  <motion.div key={`${education.org}-${index}`} variants={itemVariants}>
+                  <motion.div 
+                    key={`${education.org}-${index}`} 
+                    variants={itemVariants}
+                  >
                     <ExperienceItem {...education} />
                   </motion.div>
                 ))}

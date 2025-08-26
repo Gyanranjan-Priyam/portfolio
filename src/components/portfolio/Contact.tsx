@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,8 +21,8 @@ import {
 } from "lucide-react";
 import { SectionTitle } from "./common/SectionTitle";
 
-// Animation variants
-const containerVariants = {
+// Animation variants with proper typing
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -32,25 +32,203 @@ const containerVariants = {
     },
   },
 };
-const itemVariants = {
+
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   show: { 
     opacity: 1, 
     y: 0,
     transition: {
       duration: 0.8,
-      ease: "easeOut"
+      ease: [0.4, 0, 0.2, 1]
     }
   },
 };
-const cardVariants = {
+
+const cardVariants: Variants = {
   hidden: { opacity: 0, scale: 0.9 },
   show: { 
     opacity: 1, 
     scale: 1,
     transition: {
       duration: 0.6,
+      ease: [0.4, 0, 0.2, 1]
+    }
+  },
+};
+
+const formVariants: Variants = {
+  hidden: { opacity: 0, x: -30 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.8,
       ease: "easeOut"
+    }
+  },
+};
+
+const contactInfoVariants: Variants = {
+  hidden: { opacity: 0, x: 30 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.8,
+      delay: 0.2,
+      ease: "easeOut"
+    }
+  },
+};
+
+const contactItemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  },
+  hover: {
+    scale: 1.02,
+    transition: {
+      duration: 0.2,
+      ease: "easeInOut"
+    }
+  },
+};
+
+const socialVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  },
+  hover: {
+    scale: 1.3,
+    rotate: 15,
+    y: -5,
+    transition: {
+      duration: 0.3,
+      ease: "easeInOut"
+    }
+  },
+  tap: {
+    scale: 0.9,
+    transition: {
+      duration: 0.1
+    }
+  },
+};
+
+const buttonVariants: Variants = {
+  hover: {
+    scale: 1.05,
+    y: -2,
+    transition: {
+      duration: 0.2,
+      ease: "easeOut"
+    }
+  },
+  tap: {
+    scale: 0.95,
+    transition: {
+      duration: 0.1
+    }
+  },
+};
+
+const inputVariants: Variants = {
+  focus: {
+    scale: 1.02,
+    transition: {
+      duration: 0.2,
+      ease: "easeOut"
+    }
+  },
+};
+
+const successPopupVariants: Variants = {
+  hidden: {
+    scale: 0,
+    opacity: 0
+  },
+  show: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      damping: 25,
+      stiffness: 300,
+      duration: 0.5
+    }
+  },
+  exit: {
+    scale: 0,
+    opacity: 0,
+    transition: {
+      duration: 0.3,
+      ease: "easeInOut"
+    }
+  },
+};
+
+const successContentVariants: Variants = {
+  hidden: {
+    scale: 0.5,
+    opacity: 0,
+    y: -50
+  },
+  show: {
+    scale: 1,
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      damping: 25,
+      stiffness: 300,
+      duration: 0.5
+    }
+  },
+  exit: {
+    scale: 0.5,
+    opacity: 0,
+    y: 50,
+    transition: {
+      duration: 0.3,
+      ease: "easeInOut"
+    }
+  },
+};
+
+const successIconVariants: Variants = {
+  hidden: { scale: 0 },
+  show: {
+    scale: 1,
+    transition: {
+      delay: 0.2,
+      type: "spring",
+      damping: 15,
+      stiffness: 300
+    }
+  },
+};
+
+const successTextVariants: Variants = {
+  hidden: { y: 20, opacity: 0 },
+  show: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      delay: 0.4,
+      duration: 0.5
     }
   },
 };
@@ -61,6 +239,7 @@ interface ContactFormData {
   email: string;
   message: string;
 }
+
 interface SocialLink {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
@@ -120,18 +299,16 @@ function AnimatedBallsBackground() {
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* Small floating balls */}
       {[...Array(50)].map((_, i) => {
-        const size = Math.random() * 8 + 4; // 4-12px diameter
+        const size = Math.random() * 8 + 4;
         const initialX = Math.random() * (typeof window !== "undefined" ? window.innerWidth : 1200);
         const initialY = Math.random() * (typeof window !== "undefined" ? window.innerHeight : 800);
-        const animationDuration = Math.random() * 8 + 6; // 6-14 seconds
+        const animationDuration = Math.random() * 8 + 6;
         const delay = Math.random() * 3;
         
-        // Create different movement patterns
         const movementPattern = i % 4;
         let animateProps;
         
         if (movementPattern === 0) {
-          // Circular motion
           animateProps = {
             x: [0, 100, 0, -100, 0],
             y: [0, -100, -200, -100, 0],
@@ -139,7 +316,6 @@ function AnimatedBallsBackground() {
             opacity: [0.3, 0.8, 0.5, 0.9, 0.3],
           };
         } else if (movementPattern === 1) {
-          // Vertical floating
           animateProps = {
             y: [0, -150, 0],
             x: [0, Math.random() * 60 - 30, 0],
@@ -147,7 +323,6 @@ function AnimatedBallsBackground() {
             opacity: [0.4, 1, 0.4],
           };
         } else if (movementPattern === 2) {
-          // Diagonal drift
           animateProps = {
             x: [0, 120, 0],
             y: [0, -80, 0],
@@ -155,7 +330,6 @@ function AnimatedBallsBackground() {
             opacity: [0.2, 0.7, 0.2],
           };
         } else {
-          // Random floating
           animateProps = {
             x: [0, Math.random() * 100 - 50, Math.random() * 100 - 50, 0],
             y: [0, Math.random() * 100 - 50, Math.random() * 100 - 50, 0],
@@ -163,6 +337,7 @@ function AnimatedBallsBackground() {
             opacity: [0.3, 0.9, 0.6, 0.3],
           };
         }
+
         return (
           <motion.div
             key={i}
@@ -185,9 +360,10 @@ function AnimatedBallsBackground() {
           />
         );
       })}
+
       {/* Medium bouncing balls */}
       {[...Array(15)].map((_, i) => {
-        const size = Math.random() * 15 + 10; // 10-25px diameter
+        const size = Math.random() * 15 + 10;
         const initialX = Math.random() * (typeof window !== "undefined" ? window.innerWidth : 1200);
         const initialY = Math.random() * (typeof window !== "undefined" ? window.innerHeight : 800);
         
@@ -219,9 +395,10 @@ function AnimatedBallsBackground() {
           />
         );
       })}
+
       {/* Large slow-moving orbs */}
       {[...Array(6)].map((_, i) => {
-        const size = Math.random() * 40 + 30; // 30-70px diameter
+        const size = Math.random() * 40 + 30;
         const initialX = Math.random() * (typeof window !== "undefined" ? window.innerWidth : 1200);
         const initialY = Math.random() * (typeof window !== "undefined" ? window.innerHeight : 800);
         
@@ -260,45 +437,20 @@ function AnimatedBallsBackground() {
 function SuccessAnimation() {
   return (
     <motion.div
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0, opacity: 0 }}
+      variants={successPopupVariants}
+      initial="hidden"
+      animate="show"
+      exit="exit"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
     >
-      {/* Popup Container */}
       <motion.div
-        initial={{ scale: 0.5, opacity: 0, y: -50 }}
-        animate={{ 
-          scale: 1, 
-          opacity: 1, 
-          y: 0,
-        }}
-        exit={{ 
-          scale: 0.5, 
-          opacity: 0, 
-          y: 50 
-        }}
-        transition={{
-          type: "spring",
-          damping: 25,
-          stiffness: 300,
-          duration: 0.5
-        }}
+        variants={successContentVariants}
         className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 mx-4 max-w-md w-full"
       >
-        {/* Background Glow Effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-400/20 rounded-2xl blur-xl -z-10" />
         
-        {/* Success Icon with Pulse Effect */}
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ 
-            delay: 0.2, 
-            type: "spring", 
-            damping: 15, 
-            stiffness: 300 
-          }}
+          variants={successIconVariants}
           className="flex justify-center mb-6"
         >
           <motion.div
@@ -314,7 +466,6 @@ function SuccessAnimation() {
             }}
             className="relative"
           >
-            {/* Pulsing Ring */}
             <motion.div
               animate={{ 
                 scale: [1, 1.5, 1],
@@ -331,11 +482,8 @@ function SuccessAnimation() {
           </motion.div>
         </motion.div>
 
-        {/* Text Content */}
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
+          variants={successTextVariants}
           className="text-center space-y-3"
         >
           <h3 className="text-2xl font-bold text-green-600 dark:text-green-400">
@@ -346,7 +494,6 @@ function SuccessAnimation() {
           </p>
         </motion.div>
 
-        {/* Decorative Elements */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -386,36 +533,10 @@ function SuccessAnimation() {
             className="w-2 h-2 bg-emerald-400 rounded-full opacity-40"
           />
         </motion.div>
-
-        {/* Optional Close Button */}
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="absolute top-3 right-3 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          onClick={() => {/* Handle close */}}
-        >
-          <svg 
-            className="w-5 h-5 text-gray-400" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M6 18L18 6M6 6l12 12" 
-            />
-          </svg>
-        </motion.button>
       </motion.div>
     </motion.div>
   );
 }
-
 
 // Main Contact Component
 export function Contact() {
@@ -426,6 +547,7 @@ export function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -433,6 +555,7 @@ export function Contact() {
       [name]: value
     }));
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -449,9 +572,9 @@ export function Contact() {
       setIsSubmitting(false);
     }
   };
+
   return (
     <section id="contact" className="relative mx-auto max-w-7xl px-4 py-20 min-h-screen">
-      {/* Animated Balls Background */}
       <AnimatedBallsBackground />
       <motion.div 
         variants={containerVariants} 
@@ -473,16 +596,14 @@ export function Contact() {
             Have a project in mind? I'd love to hear about it. Let's discuss how we can bring your ideas to life.
           </motion.p>
         </motion.div>
+
         <motion.div variants={cardVariants} className="relative">
           <Card className="rounded-3xl border-2 border-primary/20 backdrop-blur-md bg-background/90 shadow-2xl overflow-hidden relative">
-            
             <CardContent className="relative p-8 md:p-12 grid lg:grid-cols-5 gap-12">
               {/* Contact Form */}
               <motion.div
+                variants={formVariants}
                 className="lg:col-span-3 space-y-8"
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
               >
                 <div className="relative">
                   <motion.div
@@ -504,7 +625,7 @@ export function Contact() {
                   </AnimatePresence>
                   <form className="space-y-6" onSubmit={handleSubmit}>
                     <div className="grid md:grid-cols-2 gap-6">
-                      <motion.div whileFocus={{ scale: 1.02 }} className="relative group">
+                      <motion.div variants={inputVariants} whileFocus="focus" className="relative group">
                         <Input 
                           name="name"
                           value={formData.name}
@@ -515,7 +636,7 @@ export function Contact() {
                         />
                       </motion.div>
                       
-                      <motion.div whileFocus={{ scale: 1.02 }} className="relative group">
+                      <motion.div variants={inputVariants} whileFocus="focus" className="relative group">
                         <Input 
                           name="email"
                           type="email"
@@ -528,7 +649,7 @@ export function Contact() {
                       </motion.div>
                     </div>
                     
-                    <motion.div whileFocus={{ scale: 1.02 }} className="relative group">
+                    <motion.div variants={inputVariants} whileFocus="focus" className="relative group">
                       <Textarea 
                         name="message"
                         value={formData.message}
@@ -541,10 +662,7 @@ export function Contact() {
                     </motion.div>
                     
                     <div className="flex flex-wrap gap-4">
-                      <motion.div 
-                        whileHover={{ scale: 1.05, y: -2 }} 
-                        whileTap={{ scale: 0.95 }}
-                      >
+                      <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
                         <Button 
                           type="submit" 
                           disabled={isSubmitting}
@@ -576,7 +694,7 @@ export function Contact() {
                         </Button>
                       </motion.div>
                       
-                      <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.95 }}>
+                      <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
                         <Button 
                           type="button" 
                           variant="outline" 
@@ -594,10 +712,8 @@ export function Contact() {
               
               {/* Contact Info & Social Links */}
               <motion.div 
+                variants={contactInfoVariants}
                 className="lg:col-span-2 space-y-12"
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
               >
                 {/* Contact Information */}
                 <div>
@@ -609,11 +725,10 @@ export function Contact() {
                     {contactInfo.map(({ icon: Icon, label, value, href, description }, index) => (
                       <motion.div
                         key={label}
+                        variants={contactItemVariants}
+                        custom={index}
+                        whileHover="hover"
                         className="group p-4 rounded-2xl bg-muted/30 hover:bg-muted/50 transition-all duration-300 border border-transparent hover:border-primary/30"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                        whileHover={{ scale: 1.02 }}
                       >
                         <div className="flex items-start gap-4">
                           <motion.div 
@@ -641,7 +756,8 @@ export function Contact() {
                     ))}
                   </div>
                 </div>
-                {/* Social Links - Small icons only */}
+
+                {/* Social Links */}
                 <div>
                   <h4 className="text-2xl font-bold mb-6 flex items-center gap-2">
                     <ExternalLink className="h-6 w-6 text-primary"/>
@@ -654,12 +770,11 @@ export function Contact() {
                         href={href}
                         target="_blank"
                         rel="noreferrer"
+                        variants={socialVariants}
+                        custom={index}
+                        whileHover="hover"
+                        whileTap="tap"
                         className={`${color} p-3 rounded-full transition-all duration-300 cursor-pointer hover:bg-primary/15 hover:shadow-lg`}
-                        whileHover={{ scale: 1.3, rotate: 15, y: -5 }}
-                        whileTap={{ scale: 0.9 }}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
                         aria-label={label}
                       >
                         <Icon className="h-8 w-8" />
@@ -667,6 +782,7 @@ export function Contact() {
                     ))}
                   </motion.div>
                 </div>
+
                 {/* Response Time Badge */}
                 <motion.div 
                   className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-purple-500/10 border border-primary/20 backdrop-blur-sm"

@@ -1,17 +1,12 @@
-/* ──────────────────────────────────────────────────────────────────
-   Hero.tsx
-   -----------------------------------------------------------------
-   Technologies: shadcn/ui, framer-motion, Tailwind CSS, lucide-react
-   ----------------------------------------------------------------- */
-
 import {
   motion,
   useScroll,
   useTransform,
   useMotionValue,
   useSpring,
+  useInView,
 } from "framer-motion";
-import { useEffect, useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,297 +17,398 @@ import {
   Linkedin,
   MessageSquare,
   Sparkles,
-  Code,
-  Zap,
+  Download,
+  MapPin,
+  Calendar,
 } from "lucide-react";
-import { containerVariants, itemVariants } from "@/lib/animations";
 import { scrollToId } from "@/lib/data";
-import { TypingAnimation } from "./common/TypingAnimation";
-import { SocialIcon } from "@/components/portfolio/common/SocialIcon";
-import { Squares } from "@/components/ui/squares-background";
 
-/* ────────────────────────────────────────────────────────────────── */
+
+
+// Import the IconCloud component
+import { IconCloud } from "@/components/magicui/icon-cloud"; // Adjust path as needed
+
+const slugs = [
+  "typescript",
+  "javascript",
+  "dart",
+  "java",
+  "react",
+  "flutter",
+  "android",
+  "html5",
+  "css3",
+  "nodedotjs",
+  "express",
+  "nextdotjs",
+  "prisma",
+  "amazonaws",
+  "postgresql",
+  "firebase",
+  "nginx",
+  "vercel",
+  "testinglibrary",
+  "jest",
+  "cypress",
+  "docker",
+  "git",
+  "jira",
+  "github",
+  "gitlab",
+  "visualstudiocode",
+  "androidstudio",
+  "sonarqube",
+  "figma",
+];
+ 
+export function IconCloudDemo() {
+  const images = slugs.map(
+    (slug) => `https://cdn.simpleicons.org/${slug}/${slug}`,
+  );
+ 
+  return (
+    <div className="relative flex size-full items-center justify-center overflow-hidden">
+      <IconCloud images={images} />
+    </div>
+  );
+}
+
+// Custom DrawOutlineButton Component
+const DrawOutlineButton = ({
+  children,
+  onClick,
+  className = "",
+  ...rest
+}: {
+  children: React.ReactNode;
+  onClick: React.MouseEventHandler;
+  className?: string;
+  [key: string]: any;
+}) => (
+  <button
+    {...rest}
+    onClick={onClick}
+    className={`group relative px-8 py-3 font-medium text-foreground transition-colors duration-[400ms] hover:text-primary ${className}`}
+  >
+    <span className="flex items-center gap-2">{children}</span>
+    {/* TOP */}
+    <span className="absolute left-0 top-0 h-[2px] w-0 bg-primary transition-all duration-100 group-hover:w-full" />
+    {/* RIGHT */}
+    <span className="absolute right-0 top-0 h-0 w-[2px] bg-primary transition-all delay-100 duration-100 group-hover:h-full" />
+    {/* BOTTOM */}
+    <span className="absolute bottom-0 right-0 h-[2px] w-0 bg-primary transition-all delay-200 duration-100 group-hover:w-full" />
+    {/* LEFT */}
+    <span className="absolute bottom-0 left-0 h-0 w-[2px] bg-primary transition-all delay-300 duration-100 group-hover:h-full" />
+  </button>
+);
+
+// Simple Typing animation component
+const TypeWriter = ({
+  texts,
+  className = "",
+}: {
+  texts: string[];
+  className?: string;
+}) => {
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [currentText, setCurrentText] = useState("");
+  const [isTyping, setIsTyping] = useState(true);
+
+  useEffect(() => {
+    const text = texts[currentTextIndex];
+    let timeout: NodeJS.Timeout;
+
+    if (isTyping) {
+      if (currentText.length < text.length) {
+        timeout = setTimeout(() => {
+          setCurrentText(text.slice(0, currentText.length + 1));
+        }, 100);
+      } else {
+        timeout = setTimeout(() => setIsTyping(false), 2000);
+      }
+    } else {
+      if (currentText.length > 0) {
+        timeout = setTimeout(() => {
+          setCurrentText(currentText.slice(0, -1));
+        }, 50);
+      } else {
+        setCurrentTextIndex((prev) => (prev + 1) % texts.length);
+        setIsTyping(true);
+      }
+    }
+
+    return () => clearTimeout(timeout);
+  }, [currentText, currentTextIndex, isTyping, texts]);
+
+  return (
+    <span className={className}>
+      {currentText}
+      <span className="inline-block w-1 h-8 bg-primary ml-1 animate-pulse" />
+    </span>
+  );
+};
 
 export function Hero() {
-  /* 1. Parallax based on page scroll */
-  const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true });
 
-  /* 2. Mouse parallax (spring-smoothed) */
+  // Simple parallax effects
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  // Light mouse parallax
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const springX = useSpring(mouseX, { stiffness: 150, damping: 15 });
-  const springY = useSpring(mouseY, { stiffness: 150, damping: 15 });
+  const springX = useSpring(mouseX, { stiffness: 50, damping: 25 });
+  const springY = useSpring(mouseY, { stiffness: 50, damping: 25 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = document
-        .querySelector<HTMLElement>("#hero-section")
-        ?.getBoundingClientRect();
-      if (!rect) return;
+      if (!heroRef.current) return;
+      const rect = heroRef.current.getBoundingClientRect();
       const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
       const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
-      mouseX.set(x * 20);
-      mouseY.set(y * 20);
+      mouseX.set(x * 15);
+      mouseY.set(y * 15);
     };
+
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
-  /* 3. Social links */
+  // Data
+  const typewriterTexts = [
+    "Full-Stack Developer",
+    "UI/UX Enthusiast",
+    "React Specialist",
+    "TypeScript Expert",
+  ];
+
   const socialLinks = [
     {
       href: "https://github.com/gyanranjan-priyam",
       icon: Github,
       label: "GitHub",
-      color: "hover:text-gray-900 dark:hover:text-white",
+      color: "hover:bg-gray-100 dark:hover:bg-gray-800",
     },
     {
       href: "https://www.linkedin.com/in/gyanranjan-priyam-aa0642321/",
       icon: Linkedin,
       label: "LinkedIn",
-      color: "hover:text-blue-600",
+      color: "hover:bg-blue-50 dark:hover:bg-blue-900/20",
     },
     {
       href: "https://wa.me/918895220675",
       icon: MessageSquare,
       label: "WhatsApp",
-      color: "hover:text-green-600",
+      color: "hover:bg-green-50 dark:hover:bg-green-900/20",
     },
-  ] as const;
+  ];
 
-  /* 4. Memoised floating particles (to avoid re-randomising every render) */
-  const floating = useMemo(
-    () =>
-      Array.from({ length: 8 }, (_, i) => ({
-        id: i,
-        size: Math.random() * 60 + 20,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        duration: Math.random() * 20 + 10,
-        delay: Math.random() * 5,
-      })),
-    []
-  );
-
-  /* ─────────────────────────────────────────────────────────────── */
   return (
     <section
-      id="hero-section"
-      className="relative mx-auto flex min-h-screen max-w-6xl items-center overflow-hidden px-4 py-12 md:py-20"
+      ref={heroRef}
+      className="relative min-h-screen overflow-hidden bg-gradient-to-br from-background via-background to-primary/5 dark:to-primary/10"
     >
-      {/* A. Subtle square grid background */}
-      <div className="absolute inset-0 -z-20">
-        <Squares
-          direction="diagonal"
-          speed={0.3}
-          squareSize={40}
-          borderColor="rgba(var(--primary),0.1)"
-          hoverFillColor="rgba(var(--primary),0.05)"
-        />
-      </div>
-
-      {/* B. Parallax orbs & floating particles */}
-      <motion.div style={{ y }} className="absolute inset-0 -z-10">
-        {/* interactive orbs that follow the cursor */}
+      {/* Simple Background Elements */}
+      <div className="absolute inset-0">
+        {/* Subtle Gradient Orbs */}
         <motion.div
           style={{ x: springX, y: springY }}
-          className="absolute top-20 left-10 h-72 w-72 rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-transparent blur-3xl"
+          className="absolute top-1/4 left-1/4 w-72 h-72 bg-gradient-to-r from-primary/10 to-purple-500/10 rounded-full blur-3xl"
         />
         <motion.div
           style={{
-            x: useTransform(springX, (v) => v * -0.5),
-            y: useTransform(springY, (v) => v * -0.5),
+            x: useTransform(springX, (x) => x * -0.3),
+            y: useTransform(springY, (y) => y * -0.3),
           }}
-          className="absolute bottom-20 right-10 h-96 w-96 rounded-full bg-gradient-to-l from-purple-500/20 via-pink-500/10 to-transparent blur-3xl"
+          className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-gradient-to-l from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl"
         />
-        <motion.div
-          className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-primary/5 via-purple-500/5 to-primary/5 blur-3xl"
-          animate={{ rotate: [0, 360], scale: [1, 1.1, 1] }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        {/* Simple rotating background */}
+        <div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-r from-primary/5 via-purple-500/5 to-pink-500/5 rounded-full blur-3xl animate-spin"
+          style={{ animationDuration: "30s" }}
         />
-        {/* small floating particles */}
-        {floating.map((p) => (
-          <motion.div
-            key={p.id}
-            style={{
-              width: p.size,
-              height: p.size,
-              left: `${p.x}%`,
-              top: `${p.y}%`,
-            }}
-            className="absolute rounded-full bg-gradient-to-r from-primary/10 to-purple-500/10 blur-sm"
-            animate={{
-              y: [0, -30, 0],
-              x: [0, 15, 0],
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.7, 0.3],
-            }}
-            transition={{
-              duration: p.duration,
-              delay: p.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </motion.div>
+      </div>
 
-      {/* C. Main content */}
-      <div className="relative z-10 w-full">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
-          className="mx-auto max-w-4xl space-y-10 text-center"
-        >
-          {/* badge */}
-          <motion.div variants={itemVariants} className="flex justify-center">
-            <Badge className="group relative flex items-center gap-2 rounded-2xl border-green-500/30 bg-gradient-to-r from-green-500/20 via-emerald-500/20 to-green-400/20 px-6 py-3 text-green-700 backdrop-blur-sm dark:text-green-300">
-              <motion.span
-                className="h-3 w-3 rounded-full bg-green-500"
-                animate={{
-                  scale: [1, 1.3, 1],
-                  boxShadow: [
-                    "0 0 0 0 rgba(34,197,94,0.7)",
-                    "0 0 0 9px rgba(34,197,94,0)",
-                    "0 0 0 0 rgba(34,197,94,0)",
-                  ],
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-              Open to opportunities
-              <Sparkles className="h-4 w-4" />
-            </Badge>
-          </motion.div>
-
-          {/* heading */}
-          <motion.h1
-            variants={itemVariants}
-            className="text-5xl font-bold leading-tight tracking-tight md:text-7xl lg:text-8xl"
-          >
-            Hi, I&apos;m{" "}
-            <motion.span
-              className="inline-block bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent"
-              animate={{
-                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-              }}
-              transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-              style={{ backgroundSize: "200% 100%" }}
-            >
-              Gyanranjan Priyam
-            </motion.span>
-            <br />
-            <TypingAnimation
-              text="Full-Stack Developer"
-              className="mt-4 inline-block underline decoration-primary/30 decoration-4 underline-offset-8"
-            />
-          </motion.h1>
-
-          {/* subtitle */}
-          <motion.p
-            variants={itemVariants}
-            className="mx-auto max-w-3xl text-xl leading-relaxed text-muted-foreground md:text-2xl"
-          >
-            I craft{" "}
-            <span className="relative font-semibold text-primary">
-              fast
-              <Zap className="ml-1 inline h-5 w-5" />
-            </span>
-            , accessible web apps with delightful UX. I love{" "}
-            <span className="font-semibold text-blue-500">TypeScript</span>,{" "}
-            <span className="font-semibold text-cyan-500">React</span> and
-            building clean UI systems.
-          </motion.p>
-
-          {/* CTA buttons */}
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-wrap justify-center gap-6 pt-2"
-          >
-            {/* View projects */}
-            <motion.div whileHover={{ y: -2, scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                size="lg"
-                className="relative z-0 flex items-center gap-3 rounded-2xl bg-gradient-to-r from-primary to-purple-600 px-8 py-4 text-lg font-semibold shadow-lg"
-                onClick={() => scrollToId("projects")}
+      {/* Main Content */}
+      <motion.div
+        ref={containerRef}
+        style={{ y, opacity }}
+        className="relative z-10 container mx-auto px-4 py-20 min-h-screen flex items-center"
+      >
+        <div className="max-w-6xl mx-auto w-full">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Text Content */}
+            <div className="space-y-8">
+              {/* Status Badge */}
+              <div
+                className={`transform transition-all duration-1000 ${
+                  isInView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+                }`}
               >
-                {/* shimmer */}
-                {/* <motion.span
-                  className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/20 to-transparent"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: "100%" }}
-                  transition={{ duration: 0.8 }}
-                /> */}
-                View Projects
-                <ArrowRight className="h-6 w-6" />
-              </Button>
-            </motion.div>
+                <Badge className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-0">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  Available for opportunities
+                  <Sparkles className="w-4 h-4" />
+                </Badge>
+              </div>
 
-            {/* Get in touch */}
-            <motion.div whileHover={{ y: -2, scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                variant="outline"
-                size="lg"
-                className="relative z-0 flex items-center gap-3 rounded-2xl border-primary px-8 py-4 text-lg font-semibold backdrop-blur-sm"
-                onClick={() => scrollToId("contact")}
+              {/* Main Heading */}
+              <div
+                className={`space-y-4 transform transition-all duration-1000 delay-200 ${
+                  isInView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+                }`}
               >
-                {/* animated border glow */}
-                <motion.span
-                  className="absolute inset-0 rounded-2xl border-2 border-primary/30"
-                  animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                Get in Touch
-                <Mail className="h-6 w-6" />
-              </Button>
-            </motion.div>
-          </motion.div>
+                <h1 className="text-5xl md:text-6xl lg:text-6xl font-bold leading-tight">
+                  <span className="block text-foreground">
+                    Hi, I'm{" "}
+                    <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent inline-block bg-300% animate-gradient">
+                      Gyanranjan Priyam
+                    </span>
+                  </span>
+                  <span className="block mt-2 text-2xl md:text-2xl lg:text-4xl text-muted-foreground">
+                    <TypeWriter texts={typewriterTexts} />
+                  </span>
+                </h1>
+              </div>
 
-          {/* social icons */}
-          <motion.div variants={itemVariants} className="pt-10">
-            <div className="flex items-center justify-center gap-8">
-              {socialLinks.map(({ href, icon: Icon, label, color }, i) => (
-                <motion.div
-                  key={label}
-                  whileHover={{ scale: 1.2, rotate: [0, -10, 10, 0] }}
-                  whileTap={{ scale: 0.9 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1 + i * 0.1 }}
+              {/* Description */}
+              <p
+                className={`text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-2xl transform transition-all duration-1000 delay-400 ${
+                  isInView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+                }`}
+              >
+                I create{" "}
+                <span className="text-primary font-semibold">beautiful</span>,{" "}
+                <span className="text-blue-600 font-semibold">functional</span>, and{" "}
+                <span className="text-purple-600 font-semibold">scalable</span> web
+                applications that deliver exceptional user experiences.
+              </p>
+
+              {/* Location & Availability */}
+              <div
+                className={`flex flex-wrap gap-6 text-sm text-muted-foreground transform transition-all duration-1000 delay-500 ${
+                  isInView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  <span>Based in India</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <span>Available for projects</span>
+                </div>
+              </div>
+
+              {/* CTA Buttons */}
+              <div
+                className={`flex flex-wrap gap-4 pt-4 transform transition-all duration-1000 delay-700 ${
+                  isInView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+                }`}
+              >
+                <Button
+                  size="lg"
+                  className="group relative overflow-hidden rounded-full px-8 py-6 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300"
+                  onClick={() => scrollToId("projects")}
                 >
-                  <SocialIcon
-                    href={href}
-                    label={label}
-                    className={`rounded-full p-3 transition-colors ${color}`}
-                  >
-                    <Icon className="h-6 w-6" />
-                  </SocialIcon>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                  <span className="relative z-10 flex items-center gap-2">
+                    View My Work
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </Button>
 
-          {/* scroll hint */}
-          <motion.div variants={itemVariants} className="pt-20 flex flex-col items-center">
-            <motion.div
-              className="flex h-12 w-7 cursor-pointer items-center justify-center rounded-full border-2 border-muted-foreground/30 bg-background/20 backdrop-blur-sm"
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="rounded-full px-8 py-6 text-lg font-semibold border-2 hover:bg-primary/5 transition-all duration-300"
+                  onClick={() => scrollToId("contact")}
+                >
+                  <Mail className="w-5 h-5 mr-2" />
+                  Get In Touch
+                </Button>
+
+                {/* Custom DrawOutline Resume Button */}
+                <DrawOutlineButton
+                  onClick={() => window.open("/resume.pdf", "_blank")}
+                  className="rounded-lg text-lg"
+                >
+                  <Download className="w-5 h-5" />
+                  Resume
+                </DrawOutlineButton>
+              </div>
+
+              {/* Social Links */}
+              <div
+                className={`flex gap-4 pt-4 transform transition-all duration-1000 delay-900 ${
+                  isInView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+                }`}
+              >
+                {socialLinks.map(({ href, icon: Icon, label, color }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`p-3 rounded-full border border-border transition-all duration-300 ${color} hover:scale-110 hover:shadow-lg hover:-translate-y-1`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span className="sr-only">{label}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column - Icon Cloud */}
+            <div
+              className={`relative flex items-center justify-center min-h-[600px] transform transition-all duration-1000 delay-300 ${
+                isInView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+              }`}
+            >
+              <div className="w-full h-96 md:h-[500px] lg:h-[600px] flex items-center justify-center text-muted-foreground/90">
+                {/* Icon Cloud goes here */}
+                
+                <IconCloudDemo />
+              </div>
+            </div>
+          </div>
+
+          {/* Simple Scroll Indicator */}
+          <div
+            className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center transition-all duration-1000 delay-1000 ${
+              isInView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+            }`}
+          >
+            <div
+              className="w-6 h-10 border-2 border-muted-foreground/30 rounded-full flex justify-center cursor-pointer hover:border-primary/50 transition-colors group"
               onClick={() => scrollToId("about")}
             >
-              <motion.span
-                className="mt-2 h-4 w-1.5 rounded-full bg-gradient-to-b from-primary to-purple-600"
-                animate={{ y: [0, 16, 0], opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </motion.div>
-            <p className="mt-4 text-sm font-medium text-muted-foreground/60">
-              Scroll to explore
-            </p>
-          </motion.div>
-        </motion.div>
-      </div>
+              <div className="w-1 h-3 bg-primary rounded-full mt-2 group-hover:animate-bounce" />
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">Scroll to explore</p>
+          </div>
+        </div>
+      </motion.div>
+      {/* CSS for gradient animation */}
+      <style>{`
+        .bg-300\\% {
+          background-size: 300% 100%;
+        }
+        .animate-gradient {
+          animation: gradient 6s ease infinite;
+        }
+        @keyframes gradient {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+      `}</style>
     </section>
   );
 }
