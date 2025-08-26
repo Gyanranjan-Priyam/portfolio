@@ -44,52 +44,7 @@ A modern, responsive portfolio website built with React, TypeScript, and cutting
 - **Class Variance Authority** - For building type-safe component APIs
 - **clsx & tailwind-merge** - Utility libraries for conditional classes
 
-## 🚀 Getting Started
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn package manager
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Gyanranjan-Priyam/myportfolio.git
-   cd myportfolio
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
-
-4. **Open your browser**
-   Navigate to `http://localhost:5173` to view the portfolio
-
-### Build for Production
-
-```bash
-npm run build
-# or
-yarn build
-```
-
-### Preview Production Build
-
-```bash
-npm run preview
-# or
-yarn preview
-```
 
 ## 📂 Project Structure
 
