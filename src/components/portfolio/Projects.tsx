@@ -84,6 +84,8 @@ const projects = [
     bgGradient: "from-purple-500/20 to-pink-500/20",
     status: "Live",
     features: ["Dark Mode", "Animations", "Responsive Design"],
+    githubUrl: "https://github.com/Gyanranjan-Priyam/portfolio.git",
+    liveUrl: "https://gyanranjanpriyam.netlify.app/",
   },
   {
     id: 3,
