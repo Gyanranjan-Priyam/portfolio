@@ -40,7 +40,7 @@ const skillsData: SkillProps[] = [
   { name: "TypeScript", level: 90 },
   { name: "Tailwind CSS", level: 88 },
   { name: "Node.js", level: 80 },
-  { name: "Next.js", level: 85 },
+  { name: "Express.js", level: 85 },
   { name: "Python", level: 75 },
 ];
 
