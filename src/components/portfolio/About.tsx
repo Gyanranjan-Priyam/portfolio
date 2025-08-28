@@ -13,12 +13,12 @@ import { SectionTitle } from "./common/SectionTitle";
 // Extended about data
 const aboutData = {
   introduction: [
-    "I'm a developer who cares about craft. I focus on building scalable frontends, typed APIs, and component systems that teams actually enjoy using.",
-    "My recent work centers on React + TypeScript, Next.js, design systems with Tailwind, and high‑quality UI with shadcn/ui."
+    "I’m an electrical engineering student with a passion for technology and web development. Alongside my core studies, I explore modern frontend tools like React, TypeScript, and Tailwind to build user-friendly and scalable applications.",
+    "My recent work centers on React + TypeScript, design systems with Tailwind, and high‑quality UI with shadcn/ui."
   ],
   technologies: [
-    "React", "TypeScript", "Next.js",
-    "Tailwind", "shadcn/ui", "Docker", "AWS"
+    "React", "TypeScript", "Node.js",
+    "Tailwind", "shadcn/ui", "Docker", "AWS", "Git" , "MongoDB" , "Express"
   ],
   quickFacts: [
     "Remote-first, async-friendly",
@@ -31,7 +31,7 @@ const aboutData = {
   interests: [
     { icon: Coffee, label: "Coffee brewing", description: "Third-wave coffee enthusiast" },
     { icon: Award, label: "Open Source", description: "Contributing to developer tools" },
-    { icon: Heart, label: "Teaching", description: "Mentoring junior developers" }
+    { icon: Heart, label: "Learning", description: "Always exploring new technologies" }
   ],
   achievements: [
     "15+ Open source contributions",

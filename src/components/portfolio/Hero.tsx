@@ -186,8 +186,6 @@ export function Hero() {
   const typewriterTexts = [
     "Full-Stack Developer",
     "UI/UX Enthusiast",
-    "React Specialist",
-    "TypeScript Expert",
   ];
 
   const socialLinks = [

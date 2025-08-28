@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { motion, type Variants } from "framer-motion";
-import { Rocket, Code, ExternalLink, Github, GraduationCap, User, CheckSquare, Database, Globe, Palette } from "lucide-react";
+import { Rocket, Code, ExternalLink, Github, GraduationCap, User, Database, Globe, Palette } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -66,11 +66,11 @@ const projects = [
     title: "College Management System (CMS)",
     description: "A comprehensive student management system with attendance tracking, grade management, and course enrollment features.",
     icon: <GraduationCap className="h-6 w-6" />,
-    tags: ["React", "Framer Motion", "Tailwind CSS", "Shadcn"],
+    tags: ["MongoDB", "Express", "React", "Node.js"],
     gradient: "from-blue-500 to-cyan-500",
     bgGradient: "from-blue-500/20 to-cyan-500/20",
-    status: "In Development",
-    features: ["Student Portal", "Grade Tracking", "Attendance System"],
+    status: "Completed",
+    features: ["Student Portal", "Grade Tracking", "Fee Payment System"],
     githubUrl: "https://github.com/Gyanranjan-Priyam/cms.git",
     liveUrl: "https://cms-gyanranjanpriyam.netlify.app/",
   },
@@ -87,17 +87,17 @@ const projects = [
     githubUrl: "https://github.com/Gyanranjan-Priyam/portfolio.git",
     liveUrl: "https://gyanranjanpriyam.netlify.app/",
   },
-  {
-    id: 3,
-    title: "Todo List App",
-    description: "A powerful task management application built with Python, featuring categories, priorities, and deadline tracking.",
-    icon: <CheckSquare className="h-6 w-6" />,
-    tags: ["Python", "Django", "SQLite", "Bootstrap"],
-    gradient: "from-green-500 to-emerald-500",
-    bgGradient: "from-green-500/20 to-emerald-500/20",
-    status: "Completed",
-    features: ["Priority System", "Categories", "Deadline Alerts"],
-  },
+  // {
+  //   id: 3,
+  //   title: "Todo List App",
+  //   description: "A powerful task management application built with Python, featuring categories, priorities, and deadline tracking.",
+  //   icon: <CheckSquare className="h-6 w-6" />,
+  //   tags: ["Python", "Django", "SQLite", "Bootstrap"],
+  //   gradient: "from-green-500 to-emerald-500",
+  //   bgGradient: "from-green-500/20 to-emerald-500/20",
+  //   status: "Completed",
+  //   features: ["Priority System", "Categories", "Deadline Alerts"],
+  // },
 ];
 
 // Section Title Component
