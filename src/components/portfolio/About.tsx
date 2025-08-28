@@ -34,11 +34,12 @@ const aboutData = {
     { icon: Heart, label: "Learning", description: "Always exploring new technologies" }
   ],
   achievements: [
-    "15+ Open source contributions",
-    "1 Conference talk given",
-    "50K+ npm downloads",
-    "100+ bugs fixed"
-  ]
+  "Built projects combining Electrical concepts with Web Development",
+  "Contributed to student tech fests and departmental projects",
+  "Created multiple React + TypeScript applications",
+  "Explored MERN stack development"
+]
+
 };
 
 // Main Enhanced About Component
