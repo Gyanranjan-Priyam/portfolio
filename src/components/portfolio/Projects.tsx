@@ -97,6 +97,8 @@ const projects = [
     bgGradient: "from-green-500/20 to-emerald-500/20",
     status: "Live",
     features: ["POS System", "Real-time Analytics", "Payment Gateway Integration"],
+    githubUrl: "https://github.com/Gyanranjan-Priyam/ims.git",
+    liveUrl: "https://ims-gyanranjanpriyam.netlify.app/",
   },
 ];
 
