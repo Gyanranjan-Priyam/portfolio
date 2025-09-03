@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { motion, type Variants } from "framer-motion";
-import { Rocket, Code, ExternalLink, Github, GraduationCap, User, Database, Globe, Palette } from "lucide-react";
+import { Rocket, Code, ExternalLink, Github, GraduationCap, User, Database, Globe, Palette, Store } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -87,17 +87,17 @@ const projects = [
     githubUrl: "https://github.com/Gyanranjan-Priyam/portfolio.git",
     liveUrl: "https://gyanranjanpriyam.netlify.app/",
   },
-  // {
-  //   id: 3,
-  //   title: "Todo List App",
-  //   description: "A powerful task management application built with Python, featuring categories, priorities, and deadline tracking.",
-  //   icon: <CheckSquare className="h-6 w-6" />,
-  //   tags: ["Python", "Django", "SQLite", "Bootstrap"],
-  //   gradient: "from-green-500 to-emerald-500",
-  //   bgGradient: "from-green-500/20 to-emerald-500/20",
-  //   status: "Completed",
-  //   features: ["Priority System", "Categories", "Deadline Alerts"],
-  // },
+  {
+    id: 3,
+    title: "Inventory Management System",
+    description: "A powerful inventory management application built with MERN stack in which a POS system is integrated.",
+    icon: <Store className="h-6 w-6" />,
+    tags: ["MongoDB", "Express", "React", "Node.js"],
+    gradient: "from-green-500 to-emerald-500",
+    bgGradient: "from-green-500/20 to-emerald-500/20",
+    status: "Live",
+    features: ["POS System", "Real-time Analytics", "Payment Gateway Integration"],
+  },
 ];
 
 // Section Title Component
