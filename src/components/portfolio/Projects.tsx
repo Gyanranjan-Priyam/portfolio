@@ -100,19 +100,19 @@ const projects = [
     githubUrl: "https://github.com/Gyanranjan-Priyam/ims.git",
     liveUrl: "https://ims-gyanranjanpriyam.netlify.app/",
   },
-  // {
-  //   id: 4,
-  //   title: "NexeU-Messaging App",
-  //   description: "A real-time messaging application built with MERN stack featuring chat, video calls, and file sharing.",
-  //   icon: <Store className="h-6 w-6" />,
-  //   tags: ["MongoDB", "Express", "React", "Node.js"],
-  //   gradient: "from-green-500 to-emerald-500",
-  //   bgGradient: "from-green-500/20 to-emerald-500/20",
-  //   status: "In Progress",
-  //   features: ["Chat", "Video Calls", "File Sharing"],
-  //   githubUrl: "https://github.com/Gyanranjan-Priyam/nexeu.git",
-  //   liveUrl: "https://nexeu.netlify.app/",
-  // },
+  {
+    id: 4,
+    title: "NexeU-AI Career Coach",
+    description: "An AI-powered career coaching platform that provides personalized job recommendations, resume building, and interview preparation.",
+    icon: <Store className="h-6 w-6" />,
+    tags: ["Supabase", "Next.js", "Node.js", "Gemini 1.5"],
+    gradient: "from-green-500 to-emerald-500",
+    bgGradient: "from-green-500/20 to-emerald-500/20",
+    status: "completed",
+    features: ["Resume Building", "Job Recommendations", "Interview Preparation", "Cover Letter Assistance"],
+    githubUrl: "https://github.com/Gyanranjan-Priyam/NexeU-AI.git",
+    liveUrl: "https://nexeuai.netlify.app/",
+  },
 ];
 
 // Section Title Component
