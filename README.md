@@ -44,51 +44,7 @@ A modern, responsive portfolio website built with React, TypeScript, and cutting
 - **Class Variance Authority** - For building type-safe component APIs
 - **clsx & tailwind-merge** - Utility libraries for conditional classes
 
-## 🚀 Getting Started
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn package manager
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Gyanranjan-Priyam/myportfolio.git
-   cd myportfolio
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
-
-4. **Open your browser**
-   Navigate to `http://localhost:5173` to view the portfolio
-
-### Build for Production
-
-```bash
-npm run build
-# or
-yarn build
-```
-
-### Preview Production Build
-
-```bash
-npm run preview
-# or
-yarn preview
 ```
 
 ## 📂 Project Structure
@@ -124,67 +80,7 @@ src/
 └── styles/              # Global styles
 ```
 
-### Adding New Projects
-
-Edit `src/lib/data.ts` to add new projects:
-
-```typescript
-const projects = [
-  {
-    id: 1,
-    title: "Your Project Name",
-    description: "Project description",
-    icon: <YourIcon className="h-6 w-6" />,
-    tags: ["React", "TypeScript", "Tailwind"],
-    gradient: "from-blue-500 to-cyan-500",
-    bgGradient: "from-blue-500/20 to-cyan-500/20",
-    status: "Live",
-    features: ["Feature 1", "Feature 2", "Feature 3"],
-    githubUrl: "https://github.com/username/repo",
-    liveUrl: "https://your-project.com",
-  },
-];
 ```
-
-### Customizing Theme
-
-The project uses CSS variables for theming. Modify `src/index.css` to customize colors:
-
-```css
-:root {
-  --primary: your-color;
-  --background: your-background;
-  /* Add more custom properties */
-}
-```
-
-### Adding New Sections
-
-1. Create a new component in `src/components/portfolio/`
-2. Import and add it to your main App component
-3. Update navigation if needed
-
-## 📄 Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run deploy` - Deploy to GitHub Pages
-
-## 🌐 Deployment
-
-This portfolio is configured for easy deployment to GitHub Pages:
-
-1. **Update homepage in package.json**
-   ```json
-   "homepage": "https://yourusername.github.io/portfolio/"
-   ```
-
-2. **Deploy to GitHub Pages**
-   ```bash
-   npm run deploy
-   ```
 
 
 ## 🤝 Contributing
