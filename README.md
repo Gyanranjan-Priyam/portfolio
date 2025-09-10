@@ -78,7 +78,6 @@ src/
 │   └── animations.ts     # Animation configurations
 ├── assets/               # Static assets
 └── styles/              # Global styles
-```
 
 ```
 
