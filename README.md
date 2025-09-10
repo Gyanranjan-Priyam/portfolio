@@ -44,42 +44,7 @@ A modern, responsive portfolio website built with React, TypeScript, and cutting
 - **Class Variance Authority** - For building type-safe component APIs
 - **clsx & tailwind-merge** - Utility libraries for conditional classes
 
-
-```
-
-## 📂 Project Structure
-
-```
-src/
-├── components/
-│   ├── portfolio/          # Main portfolio sections
-│   │   ├── Hero.tsx        # Landing section
-│   │   ├── About.tsx       # About me section
-│   │   ├── Skills.tsx      # Skills showcase
-│   │   ├── Experience.tsx  # Work experience
-│   │   ├── Projects.tsx    # Project gallery
-│   │   ├── Contact.tsx     # Contact form
-│   │   └── footer.tsx      # Footer component
-│   ├── portfolio/common/   # Shared portfolio components
-│   │   ├── Navbar.tsx      # Navigation bar
-│   │   ├── Loader.tsx      # Loading spinner
-│   │   ├── MiniStat.tsx    # Statistics component
-│   │   └── SocialIcon.tsx  # Social media icons
-│   ├── magicui/           # Animated UI components
-│   │   ├── globe.tsx       # 3D globe component
-│   │   ├── icon-cloud.tsx  # Icon cloud animation
-│   │   └── terminal.tsx    # Terminal animation
-│   ├── ui/                # Reusable UI components
-│   └── providers/         # Context providers
-├── lib/                   # Utility functions and data
-│   ├── data.ts           # Portfolio data
-│   ├── types.ts          # TypeScript definitions
-│   ├── utils.ts          # Helper functions
-│   └── animations.ts     # Animation configurations
-├── assets/               # Static assets
-└── styles/              # Global styles
-
-```
+---
 
 
 ## 🤝 Contributing
